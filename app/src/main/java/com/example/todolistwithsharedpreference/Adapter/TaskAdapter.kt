@@ -1,6 +1,7 @@
 package com.example.todolistwithsharedpreference.Adapter
 
 import android.content.DialogInterface.OnClickListener
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolistwithsharedpreference.Data.Task
@@ -17,21 +18,34 @@ class TaskAdapter(private val tasklist:MutableList<Task>,private val clicklisten
 
     class TaskViewHolder(val binding: ListItemBinding):RecyclerView.ViewHolder(binding.root) {
         fun bind(task: Task) {
-            binding.taskTittle.text = task.title
+            binding.classtitle.text = task.title
         }
 
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        TODO("Not yet implemented")
+       val binding= ListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+
+        return TaskViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return tasklist.size
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val task=tasklist[position]
+        holder.bind(task)
+        holder.binding.editbtn.setOnClickListener {
+            clicklisten.onEditClick(position)
+        }
+        holder.binding.deletebtn.setOnClickListener {
+            clicklisten.onDeleteClick(position)
+        }
+        holder.binding.checkbox.isChecked=task.isCompleted
+       holder.binding.checkbox.setOnCheckedChangeListener{_,isChecked->
+           tasklist[position].isCompleted=isChecked
+       }
     }
 }
